@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title></title>
+
+        <meta name="description" content="ngEO Browse Server presentation for the Critical Design Review (CDR) V2 in Toulouse">
+        <meta name="author" content="Stephan Meissl">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+        <link rel="stylesheet" href="reveal.js/css/theme/eox.css" id="theme">
+        <!-- Custom css -->
+        <link rel="stylesheet" href="custom.css">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="reveal.js/lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <div class="slides">
+
+                <!-- Cover page -->
+                <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                    <h2 style="padding: 30px 20px 0 20px;">ngEO Browse Server</h2>
+                    <p>ngEO Task 4 CDR V2 - Toulouse - 2014-06-04</p>
+                    <a class="image" href="http://eox.at"><img style="background-color:rgba(255, 255, 255, 0); box-shadow:0 0 0;" src="./images/eox-logo.png" alt="EOX IT Services GmbH, Austria" title="EOX IT Services GmbH, Austria"/></a>
+                    <p><a href="mailto:office@eox.at">office@eox.at</a> <a href="https://twitter.com/eox_a">@eox_a</a></p>
+                    <p>Stephan Meißl <a href="mailto:stephan.meissl@eox.at">stephan.meissl@eox.at</a> <a href="https://twitter.com/Schpidi">@Schpidi</a></p>
+                    <br/>
+                    <p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0; margin:0 0 12px 0;" src="http://i.creativecommons.org/l/by/4.0/80x15.png" /></a><small>&nbsp;This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</small></p>
+                    <aside class="notes">
+                        <p></p>
+                    </aside>
+                </section>
+
+                <section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/ngeo_architecture.png" alt="ngEO Architecture" title="ngEO Architecture"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img style="background-color:rgba(255, 255, 255, 0); box-shadow:0 0 0;" src="./images/browse_server_architecture.png" alt="BROW Architecture" title="BROW Architecture"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>Exclusively based on Open Source Software like</li>
+                                <ul>
+                                    <li><a href="http://gdal.org">GDAL</a> for raster processing</li>
+                                    <li><a href="http://mapserver.org">MapServer</a> for OGC services support</li>
+                                    <li><a href="http://eoxserver.org">EOxServer</a> for Earth Observation extension</li>
+                                    <li><a href="http://mapserver.org/mapcache/index.html">MapCache</a> for extremely well performing WMTS and WMS access</li>
+                                </ul>
+                                <li>OGC's WMTS and WMS Standards</li>
+                                <li>Central configuration by ngEO Controller</li>
+                                <li>Data ingested by ngEO FEED</li>
+                                <li>Authorization from ngEO Web Server</li>
+                                <li>Processing of raster data: geo-referencing, footprint, projection, alpha band, tiling, overviews, compression</li>
+                            </ul>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence.png" alt="Flow of Browse Images" title="Flow of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Interfaces with the FEED</h2>
+                        <ul>
+                            <li>Upload images: WebDAV at<br/>http://URL/store/</li>
+                            <li>Ingestion: Browse Reports via HTTP POST<br/>http://URL/browse/ingest</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence_ingestion.png" alt="Ingestion of Browse Images" title="Ingestion of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Preprocessing</h2>
+                        <ul>
+                            <li class="fragment">Input Geographic Metadata for Geo-referencing
+                                <ul>
+                                    <li>Footprint polygon - footprint</li>
+                                    <li>Regular grid of tiepoints - regularGrid</li>
+                                    <li>Pre-georeferenced images</li>
+                                    <ul>
+                                        <li>rectifiedBrowse</li>
+                                        <li>modelInGeotiff</li>
+                                    </ul>
+                                </ul>
+                            </li>
+                            <li class="fragment">Optimizations
+                                <ul>
+                                    <li>Footprint generation</li>
+                                    <li>Re-projection</li>
+                                    <li>Addition of alpha-channel</li>
+                                    <li>Internal tilling</li>
+                                    <li>Overviews</li>
+                                    <li>Compression</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Interfaces with the WEBC<br/>&amp; Generic Clients</h2>
+                        <ul>
+                            <li>WMTS<br/>
+                                http://URL/c/wmts/1.0.0/WMTSCapabilities.xml<br/>
+                                http://URL/c/wmts/1.0.0/LAYER/default/WGS84/0/0/1.jpg
+                            </li>
+                            <li>WMS<br/>http://URL/c/?service=WMS&amp;request=GetCapabilities&amp;version=1.3.0</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence_wmts.png" alt="Retrieval of Browse Images" title="Retrieval of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Interfaces with the WEBS</h2>
+                        <ul>
+                            <li>Authorization</li>
+                                <ul>
+                                    <li>Authentication done on proxy</li>
+                                    <li>Patch to MapCache</li>
+                                    <li>memcached to cache decisions</li>
+                                    <li>Simple Python script to query WEBS</li>
+                                </ul>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Interfaces with the CTRL</h2>
+                        <ul>
+                            <li>Register/Unregister: JSON via HTTP POST/DELETE<br/>
+                                http://URL/browse/controllerServer</li>
+                            <li>Status: Retrieve via HTTP GET and set via HTTP PUT<br/>
+                                http://URL/browse/status</li>
+                            <li>Configuration &amp; Schema: Retrieve via HTTP GET and set via HTTP PUT<br/>
+                                http://URL/browse/instanceconfig</li>
+                            <li>Configuration revision: Retrieve via HTTP GET<br/>
+                                http://URL/browse/revision</li>
+                            <li>Log:<br/>
+                                http://URL/browse/log JSON list of available log files<br/>
+                                http://URL/browse/log/(\d{4}-\d{2}-\d{2})/(.*) Log file contenct<br/>
+                                e.g. http://URL/browse/log/2014-05-20/ngeo.log</li>
+                            <li>Browse Layer configuration: Layer definition XML via HTTP PUT or POST<br/>
+                                http://URL/browse/config</li>
+                            <li>Notifications: Sent for TODO</li>
+                            <li>Reporting: Files are generated and stored by a daily cronjob</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Command Line Interfaces</h2>
+                        <ul>
+                            <li>Ingestion<br/>
+                                python manage.py ngeo_ingest_browse_report &lt;browse-report-xml&gt;
+                            </li>
+                            <li>Export</li>
+                            <li>Import</li>
+                            <li>Delete</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence_export.png" alt="Export of Browse Images" title="Export of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence_import.png" alt="Import of Browse Images" title="Import of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/browse_images_sequence_delete.png" alt="Deletion of Browse Images" title="Deletion of Browse Images"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_components.png" alt="BROW Components" title="BROW Components"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_components_external_interfaces.png" alt="BROW Components" title="BROW Components"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_components_external_interfaces_extended.png" alt="BROW Components" title="BROW Components"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_core_components.png" alt="BROW Component Core" title="BROW Component Core"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_cache_components.png" alt="BROW Component Cache" title="BROW Component Cache"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/model_config.png" alt="BROW Core Data Model" title="BROW Core Data Model"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/model_mapcache.png" alt="BROW Cache Data Model" title="BROW Cache Data Model"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Technology Baseline</h2>
+                        <ul>
+                            <li>CentOS 6 64bit repositories (base, extras, updates) based on RHEL 6</li>
+                            <ul>
+                                <li>Apache HTTP server 2.2: httpd, mod_wsgi</li>
+                                <li>PostgreSQL 8.4: postgresql-server, postgresql</li>
+                                <li>Python 2.6: python, python-lxml, python-psycopg2, pytz</li>
+                            </ul>
+                            <li>EPEL &amp; ELGIS repositories</li>
+                            <ul>
+                                <li>Django 1.4: Django14</li>
+                                <li>PROJ.4 4.8: proj</li>
+                                <li>GDAL 1.9: gdal, gdal-python</li>
+                                <li>PostGIS 1.5: postgis</li>
+                            </ul>
+                            <li>EOX repository</li>
+                            <ul>
+                                <li>libxml2 2.7: libxml2, libxml2-python - GML patch</li>
+                                <li>MapServer 6.2: mapserver, mapserver-python</li>
+                                <li>MapCache 1.2: mapcache - authz patch</li>
+                                <li>memcached TODO: TODO</li>
+                                <li>EOxServer 0.3: EOxServer</li>
+                                <li>ngeo.b.core 2.0: ngEO_Browse_Server - 1.0 deprecated</li>
+                            </ul>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Development &amp; Testing</h2>
+                        <ul>
+                            <li>Git hosted on <a href="https://github.com/EOX-A/ngeo-b/">GitHub</a></li>
+                            <li>Vagrant &amp; VirtualBox (see <a href="https://github.com/EOX-A/ngeo-b/blob/master/vagrant/HOWTO">HOWTO</a>)</li>
+                            <li><a href="https://jenkins.eox.at/job/ngEO_BrowseServer_branch-2-0/">Jenkins CI</a></li>
+                            <li>Python/Django unit test framework</li>
+                            <li>Performance tests using JMeter</li>
+                            <li>Integration testing on OpenStack platform provided by Task 5</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/SSTP_ingest_graph.png" alt="JMeter" title="JMeter"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_installation_flow.png" alt="BROW Installation" title="BROW Installation"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_deployment_small.png" alt="BROW Deployment Basic" title="BROW Deployment Basic"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_deployment.png" alt="BROW Deployment Multiple" title="BROW Deployment Multiple"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <img src="./images/brow_deployment_alternative.png" alt="BROW Deployment Alternative" title="BROW Deployment Alternative"/>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                        <h2>Status</h2>
+                        <ul>
+                            <li>Fully finished implementation</li>
+                        </ul>
+                        <aside class="notes">
+                            <p></p>
+                        </aside>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="images/map_02_terrain_europe_l5.png" class="box">
+                        <h2>Further EOX Contributions to ngEO</h2>
+                        <ul>
+                            <li>Background &amp; Overlay Maps Service Operation<br/><a href="http://maps.eox.at"><img src="./images/eox-maps_small.png" alt="Browse Server Architektur" title="EOX::Maps"/></a></li>
+                            <li>Provision of integration and validation platform for Task 4</li>
+                            <li>Multi-Mission Hosting &amp; Validation (Task 5)</li>
+                            <li>3D Browse Extension (V-Manip project)</li>
+                        </ul>
+                        <aside class="notes">
+                            <p>EOX::Maps</p>
+                            <ul>
+                                <li>Exclusively Open Data</li>
+                            </ul>
+                            <p>OpenStack for Task 4</p>
+                            <p>Task 5</p>
+                            <p>V-Manip</p>
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_02_terrain_europe_l5.png" class="box">
+                        <img class="stretch" src="./images/v-manip_curtain_1.png"/>
+                        <aside class="notes">
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_02_terrain_europe_l5.png" class="box">
+                        <img class="stretch" src="./images/v-manip_curtain_2.png"/>
+                        <aside class="notes">
+                        </aside>
+                    </section>
+
+                    <section data-background="images/map_02_terrain_europe_l5.png" class="box">
+                        <img class="stretch" src="./images/v-manip_curtain_3.png"/>
+                        <aside class="notes">
+                        </aside>
+                    </section>
+                </section>
+
+                <section data-background="images/map_02_terrain_europe_l5.png" class="box">
+                    <h2 style="padding: 30px 20px 0 20px;">ngEO Browse Server</h2>
+                    <p>ngEO Task 4 CDR V2 - Toulouse - 2014-06-04</p>
+                    <a class="image" href="http://eox.at"><img style="background-color:rgba(255, 255, 255, 0); box-shadow:0 0 0;" src="./images/eox-logo.png" alt="EOX IT Services GmbH, Austria" title="EOX IT Services GmbH, Austria"/></a>
+                    <p><a href="mailto:office@eox.at">office@eox.at</a> <a href="https://twitter.com/eox_a">@eox_a</a></p>
+                    <p>Stephan Meißl <a href="mailto:stephan.meissl@eox.at">stephan.meissl@eox.at</a> <a href="https://twitter.com/Schpidi">@Schpidi</a></p>
+                    <br/>
+                    <p>View presentation at <a href="http://schpidi.github.io/ngeo_brow_cdr_v2">http://schpidi.github.io/ngeo_brow_cdr_v2</a></p>
+                    <br/>
+                    <p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0; margin:0 0 12px 0;" src="http://i.creativecommons.org/l/by/4.0/80x15.png" /></a><small>&nbsp;This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</small></p>
+                    <p><a href="http://esa.int"><img style="border-width:0; margin:-15px 0; box-shadow:0 0 0;" src="./images/esa-logo.png" alt="European Space Agency - ESA" title="European Space Agency - ESA"/></a> Thanks to ESA for supporting Open Source</p>
+                    <aside class="notes">
+                        <p>Many thanks for your attention.</p>
+                    </aside>
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="reveal.js/lib/js/head.min.js"></script>
+        <script src="reveal.js/js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                keyboard: true,
+                touch: true,
+                overview: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    // { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+                    // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
