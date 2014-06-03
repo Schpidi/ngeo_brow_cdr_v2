@@ -8,8 +8,8 @@ Point your browser to the [online
 presentation](http://schpidi.github.io/ngeo_brow_cdr_v2) or serve it locally.
 
 ```bash
-git clone 
-cd 
+git clone git@github.com:Schpidi/ngeo_brow_cdr_v2.git
+cd ngeo_brow_cdr_v2/
 npm install
 grunt serve
 ```
