@@ -1,6 +1,6 @@
-# ngEO Extensions
+# ngEO Task 4 CDR V2 - Toulouse - 2014-06-04
 
-ngEO Browse Server presentation for the Critical Design Review (CDR) V2 in Toulouse
+ngEO Browse Server presentation for the Task 4 Critical Design Review (CDR) V2 in Toulouse
 
 ## Running presentation
 
