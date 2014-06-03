@@ -91,8 +91,8 @@
                     <section data-background="images/map_01_terrain_europe_l4.png" class="box">
                         <h2>Interfaces with the FEED</h2>
                         <ul>
-                            <li>Upload images: WebDAV at<br/>http://URL/store/</li>
-                            <li>Ingestion: Browse Reports via HTTP POST<br/>http://URL/browse/ingest</li>
+                            <li>Upload images: WebDAV at<br/><a href"">http://URL/store/</a></li>
+                            <li>Ingestion: Browse Reports via HTTP POST<br/><a href"">http://URL/browse/ingest</a></li>
                         </ul>
                         <aside class="notes">
                             <p></p>
@@ -109,7 +109,7 @@
                     <section data-background="images/map_01_terrain_europe_l4.png" class="box">
                         <h2>Preprocessing</h2>
                         <ul>
-                            <li class="fragment">Input Geographic Metadata for Geo-referencing
+                            <li>Input Geographic Metadata for Geo-referencing
                                 <ul>
                                     <li>Footprint polygon - footprint</li>
                                     <li>Regular grid of tiepoints - regularGrid</li>
@@ -120,7 +120,7 @@
                                     </ul>
                                 </ul>
                             </li>
-                            <li class="fragment">Optimizations
+                            <li>Optimizations
                                 <ul>
                                     <li>Footprint generation</li>
                                     <li>Re-projection</li>
@@ -139,11 +139,12 @@
                     <section data-background="images/map_01_terrain_europe_l4.png" class="box">
                         <h2>Interfaces with the WEBC<br/>&amp; Generic Clients</h2>
                         <ul>
-                            <li>WMTS<br/>
-                                http://URL/c/wmts/1.0.0/WMTSCapabilities.xml<br/>
-                                http://URL/c/wmts/1.0.0/LAYER/default/WGS84/0/0/1.jpg
+                            <li>WMTS <a href"">http://URL/c/wmts/</a><br/>
+                                e.g. <a href"">http://URL/c/wmts/1.0.0/WMTSCapabilities.xml</a><br/>
+                                <a href"">http://URL/c/wmts/1.0.0/LAYER/default/WGS84/0/0/1.jpg</a>
                             </li>
-                            <li>WMS<br/>http://URL/c/?service=WMS&amp;request=GetCapabilities&amp;version=1.3.0</li>
+                            <li>WMS <a href"">http://URL/c/</a><br/>
+                                e.g. <a href"">http://URL/c/?service=WMS&amp;request=GetCapabilities&amp;version=1.3.0</a></li>
                         </ul>
                         <aside class="notes">
                             <p></p>
@@ -160,12 +161,17 @@
                     <section data-background="images/map_01_terrain_europe_l4.png" class="box">
                         <h2>Interfaces with the WEBS</h2>
                         <ul>
-                            <li>Authorization</li>
+                            <li>Authorization invoked by BROW</li>
                                 <ul>
                                     <li>Authentication done on proxy</li>
                                     <li>Patch to MapCache</li>
-                                    <li>memcached to cache decisions</li>
                                     <li>Simple Python script to query WEBS</li>
+                                    <ul>
+                                        <li>Only <i>RESTRICTED</i> and <i>PRIVATE</i> layers</li>
+                                        <li>Username from HTTP header e.g. <i>SP-Person-Identifier</i></li>
+                                        <li>Authorization based on browse layer &amp; username</li>
+                                    </ul>
+                                    <li>Memcached to cache decisions</li>
                                 </ul>
                         </ul>
                         <aside class="notes">
@@ -177,20 +183,20 @@
                         <h2>Interfaces with the CTRL</h2>
                         <ul>
                             <li>Register/Unregister: JSON via HTTP POST/DELETE<br/>
-                                http://URL/browse/controllerServer</li>
+                                <a href"">http://URL/browse/controllerServer</a></li>
                             <li>Status: Retrieve via HTTP GET and set via HTTP PUT<br/>
-                                http://URL/browse/status</li>
+                                <a href"">http://URL/browse/status</a></li>
                             <li>Configuration &amp; Schema: Retrieve via HTTP GET and set via HTTP PUT<br/>
-                                http://URL/browse/instanceconfig</li>
+                                <a href"">http://URL/browse/instanceconfig</a></li>
                             <li>Configuration revision: Retrieve via HTTP GET<br/>
-                                http://URL/browse/revision</li>
-                            <li>Log:<br/>
-                                http://URL/browse/log JSON list of available log files<br/>
-                                http://URL/browse/log/(\d{4}-\d{2}-\d{2})/(.*) Log file contenct<br/>
-                                e.g. http://URL/browse/log/2014-05-20/ngeo.log</li>
+                                <a href"">http://URL/browse/revision</a></li>
                             <li>Browse Layer configuration: Layer definition XML via HTTP PUT or POST<br/>
-                                http://URL/browse/config</li>
-                            <li>Notifications: Sent for TODO</li>
+                                <a href"">http://URL/browse/config</a></li>
+                            <li>Log:<br/>
+                                <a href"">http://URL/browse/log JSON list of available log files</a><br/>
+                                <a href"">http://URL/browse/log/(\d{4}-\d{2}-\d{2})/(.*)</a> Log file contenct<br/>
+                                e.g. <a href"">http://URL/browse/log/2014-05-20/ngeo.log</a></li>
+                            <li>Notifications: Sent for everything logged with level <i>ERROR</i> or higher</li>
                             <li>Reporting: Files are generated and stored by a daily cronjob</li>
                         </ul>
                         <aside class="notes">
@@ -200,14 +206,13 @@
 
                     <section data-background="images/map_01_terrain_europe_l4.png" class="box">
                         <h2>Command Line Interfaces</h2>
-                        <ul>
-                            <li>Ingestion<br/>
-                                python manage.py ngeo_ingest_browse_report &lt;browse-report-xml&gt;
-                            </li>
-                            <li>Export</li>
-                            <li>Import</li>
-                            <li>Delete</li>
-                        </ul>
+                        <p>Ingest, Export, Import, and Delete
+                        <pre><code data-trim contenteditable class="ba  sh">
+$ python manage.py ngeo_ingest &lt;browse-report-xml&gt;
+$ python manage.py ngeo_export --layer=&lt;layer-id&gt; | --browse-type=&lt;browse-type&gt; [--start=&lt;start-date-time&gt;] [--end=&lt;end-date-time&gt;]
+$ python manage.py ngeo_import &lt;package-path&gt;
+$ python manage.py ngeo_delete --layer=&lt;layer-id&gt; | --browse-type=&lt;browse-type&gt; [--start=&lt;start-date-time&gt;[--end=&lt;end-date-time&gt;]
+                        </code></pre>
                         <aside class="notes">
                             <p></p>
                         </aside>
@@ -296,7 +301,7 @@
                                 <li>libxml2 2.7: libxml2, libxml2-python - GML patch</li>
                                 <li>MapServer 6.2: mapserver, mapserver-python</li>
                                 <li>MapCache 1.2: mapcache - authz patch</li>
-                                <li>memcached TODO: TODO</li>
+                                <li>Memcached 1.4: memcached</li>
                                 <li>EOxServer 0.3: EOxServer</li>
                                 <li>ngeo.b.core 2.0: ngEO_Browse_Server - 1.0 deprecated</li>
                             </ul>
@@ -356,10 +361,19 @@
                 </section>
 
                 <section>
-                    <section data-background="images/map_01_terrain_europe_l4.png" class="box">
+                    <section data-background="images/map_02_terrain_europe_l5.png" class="box">
                         <h2>Status</h2>
                         <ul>
-                            <li>Fully finished implementation</li>
+                            <li>Finished with implementation</li>
+                            <li>Deliverables</li>
+                            <ul>
+                                <li>DDS 1.4 20 May 2014</li>
+                                <li>IOM 1.5 23 May 2015</li>
+                                <li>SSTP 1.4 23 May 2015</li>
+                                <li>SSTR TBD</li>
+                            </ul>
+                            <li>Open Jira issues</li>
+                            <li>Warranty</li>
                         </ul>
                         <aside class="notes">
                             <p></p>
@@ -369,7 +383,7 @@
 
                 <section>
                     <section data-background="images/map_02_terrain_europe_l5.png" class="box">
-                        <h2>Further EOX Contributions to ngEO</h2>
+                        <h2>Further EOX Contributions</h2>
                         <ul>
                             <li>Background &amp; Overlay Maps Service Operation<br/><a href="http://maps.eox.at"><img src="./images/eox-maps_small.png" alt="Browse Server Architektur" title="EOX::Maps"/></a></li>
                             <li>Provision of integration and validation platform for Task 4</li>
